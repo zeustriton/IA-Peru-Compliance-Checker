@@ -42,22 +42,21 @@ import { ThemeToggle } from "@/components/ui/theme-toggle";
 export default function Home() {
   const [activeTab, setActiveTab] = useState("inicio");
   const [showChecker, setShowChecker] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
-    setMounted(true);
-    
     // Scroll progress indicator
     const handleScroll = () => {
       const scrollTop = window.scrollY;
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const scrollPercent = (scrollTop / docHeight) * 100;
+      const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
       setScrollProgress(scrollPercent);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const scrollToChecker = () => {
